@@ -31,6 +31,8 @@ db.query('SELECT * FROM department', function(err, results) {
     }
 });
 
+const teamArray =[];
+
 // First prompt
 function companyStructure() {
     inquirer.prompt ([
@@ -75,6 +77,11 @@ function addDept() {
             message: "What is the name of the department?",
         }
     ])
+    .then(answers => {
+        const createDept = new Department(answers.addADepartment);
+        teamArray.push(createDept);
+        companyStructure();
+    });
 }
 
 // Add Employee prompt
@@ -101,6 +108,11 @@ function addEmployee() {
             message: "What is the employee's manager?",
         },
     ])
+    .then(answers => {
+        const createNewEmployee = new Employee(answers.firstName, answers.lastName, answers.role, answers.assignManager);
+        teamArray.push(createNewEmployee);
+        companyStructure();
+    });
 }
 
 // Update Employee Role prompt
@@ -112,4 +124,11 @@ function updateEmployeeRole() {
             message: "Which employee's role do you want to update?",
         }
     ])
+    .then(answers => {
+        const updateEmployeeInfo = new EmployeeInfo(answers.updateRole);
+        teamArray.push(updateEmployeeInfo);
+        companyStructure();
+    });
 }
+
+companyStructure()
