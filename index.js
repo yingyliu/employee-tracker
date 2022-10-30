@@ -1,15 +1,44 @@
 // Import and require mysql2
 const mysql = require('mysql2');
 
+const express = require('express');
 const inquirer = require('inquirer');
-const { default: Choices } = require('inquirer/lib/objects/choices');
 
+const app = express();
+
+// Express middleware
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+// Connect to database
+const db = mysql.createConnection(
+    {
+        host: 'localhost',
+        user: 'root',//MySQL username
+        password: 'password', //MySQL password
+        database: 'employee_db'
+    },
+    console.log(`connected to the employee_db datatbase.`)
+);
+
+// Query database
+db.query('SELECT * FROM department', function(err, results) {
+
+    if(results){
+        results.forEach(function(dept){
+            console.log(dept)
+        })
+    }
+});
+
+
+// first prompt
 function companyStructure() = {
     inquirer.prompt ([
         {
             type:"list",
             name: "overview",
-            message: "Please select the following option.",
+            message: "What would you like to do?",
             choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Exit"],
         }
     ])
