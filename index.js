@@ -31,9 +31,8 @@ db.query('SELECT * FROM department', function(err, results) {
     }
 });
 
-
-// first prompt
-function companyStructure() = {
+// First prompt
+function companyStructure() {
     inquirer.prompt ([
         {
             type:"list",
@@ -53,13 +52,64 @@ function companyStructure() = {
             case 'View all employees':
                 break;
             case 'Add a department':
+                addDept()
                 break;
             case 'Add an employee':
+                addEmployee()
                 break;
             case 'Update an employee role':
+                updateEmployeeRole()
                 break;
             case 'Exit':
                 break;
         }
     })
+}
+
+// Add Dept prompt
+function addDept() {
+    inquirer.prompt ([
+        {
+            type:"input",
+            name: "addADepartment",
+            message: "What is the name of the department?",
+        }
+    ])
+}
+
+// Add Employee prompt
+function addEmployee() {
+    inquirer.prompt ([
+        {
+            type:"input",
+            name: "firstName",
+            message: "What is the employee's first name?",
+        },
+        {
+            type:"input",
+            name: "lastName",
+            message: "What is the employee's last name?",
+        },
+        {
+            type:"input",
+            name: "role",
+            message: "What is the employee's role?",
+        },
+        {
+            type:"input",
+            name: "assignManager",
+            message: "What is the employee's manager?",
+        },
+    ])
+}
+
+// Update Employee Role prompt
+function updateEmployeeRole() {
+    inquirer.prompt ([
+        {
+            type:"input",
+            name: "updateRole",
+            message: "Which employee's role do you want to update?",
+        }
+    ])
 }
