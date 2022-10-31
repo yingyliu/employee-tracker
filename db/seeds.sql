@@ -6,7 +6,7 @@ VALUES  ("R&D"), --1
         ("Finance"); --5
 
 INSERT INTO role(title, salary, department_id)
-VALUES   ("Jr. Software Engineer", 100000, 1), --role_id 1
+VALUES  ("Jr. Software Engineer", 100000, 1), --role_id 1
         ("Sr. Software Engineer", 200000, 1), --role_id 2
         ("Manufacturing Engineer", 100000, 2), --role_id 3
         ("Sales Representive", 50000, 3), --role_id 4

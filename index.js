@@ -6,6 +6,8 @@ const inquirer = require('inquirer');
 
 const app = express();
 
+const teamArray =[];
+
 // Express middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -31,7 +33,7 @@ db.query('SELECT * FROM department', function(err, results) {
     }
 });
 
-const teamArray =[];
+
 
 // First prompt
 function companyStructure() {
