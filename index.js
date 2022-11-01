@@ -1,16 +1,17 @@
 // Import and require mysql2
 const mysql = require('mysql2');
 
-const express = require('express');
+// const express = require('express');
 const inquirer = require('inquirer');
+// import inquirer from 'inquirer';
 
-const app = express();
+// const app = express();
 
 const teamArray =[];
 
-// Express middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+// // Express middleware
+// app.use(express.urlencoded({ extended: false }));
+// app.use(express.json());
 
 // Connect to database
 const db = mysql.createConnection(
@@ -24,36 +25,41 @@ const db = mysql.createConnection(
 );
 
 // Query database
-db.query('SELECT * FROM department', function(err, results) {
+function viewDepartments() {
+    db.query('SELECT * FROM department', function(err, results) { 
+        if(results){
+            console.table(results);
+        }
+        // ask the user what they want to do again
+        companyStructure();
+    });
+}
 
-    if(results){
-        results.forEach(function(dept){
-            console.log(dept)
-        })
-    }
-});
 
-
-
-// First prompt
+// function to ask the user what they want to do
 function companyStructure() {
-    inquirer.prompt ([
+    inquirer.prompt (
         {
             type:"list",
             name: "overview",
             message: "What would you like to do?",
             choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Exit"],
         }
-    ])
-    .then(answers => {
-        const {menu} = answers;
+    )
+    .then(answer => {
+        console.log(answer)
+        // const { overview } = answers;
+        const overview = answer.overview;
 
-        switch (menu) {
+        switch (overview) {
             case 'View all departments':
+                viewDepartments();
                 break;
             case 'View all roles':
+                viewRoles();
                 break;
             case 'View all employees':
+                viewEmployees();
                 break;
             case 'Add a department':
                 addDept()
@@ -65,6 +71,7 @@ function companyStructure() {
                 updateEmployeeRole()
                 break;
             case 'Exit':
+                db.end();
                 break;
         }
     })
@@ -133,4 +140,4 @@ function updateEmployeeRole() {
     });
 }
 
-companyStructure()
+companyStructure();
