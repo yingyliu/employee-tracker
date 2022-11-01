@@ -187,10 +187,9 @@ function addEmployee() {
     ])
     .then(answers => { 
         const paramsTwo = [answers.firstName, answers.lastName, answers.role, answers.assignManager];
-        const sqlAddEmployee = `SELECT employees.first_name AS firstName, employees.last_name AS lastName, employees.role_id AS role, employees.manager_id AS assignManager FROM employees, `;
-        db.query('SELECT employees.id, employees.first_name, employees.last_name, employees.role_id, employees.manager_id ')
+        const sqlAddEmployee = `INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES (?, ?, ?,?)`;
         db.query(sqlAddEmployee, paramsTwo, (err, result) => {
-                console.log("New employee added");
+                console.log(result);
 
                 teamArray.push(sqlAddEmployee, paramsTwo);
                 companyStructure();
@@ -214,9 +213,14 @@ function updateEmployeeRole() {
         }
     ])
     .then(answers => {
-        const updateEmployeeInfo = new EmployeeInfo(answers.updateRole);
-        teamArray.push(updateEmployeeInfo);
-        companyStructure();
+        const paramsThree = [answers.firstName, answers.lastName, answers.role, answers.assignManager];
+        const sqlAddEmployee = `INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES (?, ?, ?,?)`;
+        db.query(sqlAddEmployee, paramsThree, (err, result) => {
+                console.log(result);
+
+                teamArray.push(sqlAddEmployee, paramsThree);
+                companyStructure();
+        })
     });
 }
 
