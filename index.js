@@ -24,17 +24,6 @@ const db = mysql.createConnection(
     console.log(`connected to the employee_db datatbase.`)
 );
 
-// Query database
-function viewDepartments() {
-    db.query('SELECT * FROM department', function(err, results) { 
-        if(results){
-            console.table(results);
-        }
-        // ask the user what they want to do again
-        companyStructure();
-    });
-}
-
 
 // function to ask the user what they want to do
 function companyStructure() {
@@ -76,6 +65,39 @@ function companyStructure() {
         }
     })
 }
+
+// Display view all departments
+function viewDepartments() {
+    db.query('SELECT * FROM departments', function(err, results) { 
+        if(results){
+            console.table(results);
+        }
+        // ask the user what they want to do again
+        companyStructure();
+    });
+};
+
+// Display view all roles
+function viewRoles() {
+    db.query('SELECT * FROM roles', function(err, results) { 
+        if(results){
+            console.table(results);
+        }
+        // ask the user what they want to do again
+        companyStructure();
+    });
+};
+
+// Display view all employees
+function viewEmployees() {
+    db.query('SELECT * FROM employees', function(err, results) { 
+        if(results){
+            console.table(results);
+        }
+        // ask the user what they want to do again
+        companyStructure();
+    });
+};
 
 // Add Dept prompt
 function addDept() {
