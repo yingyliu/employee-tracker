@@ -145,12 +145,13 @@ function addRole() {
 
     ])
     .then(answers => {
-        const params = [answers.role, answers.salary, answers.dept];
-        const sqlRole = `SELECT roles.title AS newRole, roles.salary AS salary, roles.dept_id AS dept FROM roles, `;
-        db.query(sqlRole, params, (err, result) => {
-                console.log("New role added");
+        const paramsOne = [answers.newRole, answers.salary, answers.dept];
+        // const sqlRole = `INSERT INTO role(title, salary, dept_id) VALUES (?,?,?)`;
+        const sqlRole = `INSERT INTO roles(title, salary, dept_id) VALUES (?, ?, ?)`;
+        db.query(sqlRole, paramsOne, (err, result) => {
+                console.log(result);
 
-                teamArray.push(sqlRole, params);
+                teamArray.push(sqlRole, paramsOne);
                 companyStructure();
         })
     })
@@ -159,11 +160,6 @@ function addRole() {
 
 // WHEN I choose to add an employee
 // THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
-
-// WHEN I choose to update an employee role
-// THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
-
-
 
 // Add Employee prompt
 function addEmployee() {
@@ -189,12 +185,24 @@ function addEmployee() {
             message: "What is the employee's manager?",
         },
     ])
-    .then(answers => {
-        const createNewEmployee = new Employee(answers.firstName, answers.lastName, answers.role, answers.assignManager);
-        teamArray.push(createNewEmployee);
-        companyStructure();
+    .then(answers => { 
+        const paramsTwo = [answers.firstName, answers.lastName, answers.role, answers.assignManager];
+        const sqlAddEmployee = `SELECT employees.first_name AS firstName, employees.last_name AS lastName, employees.role_id AS role, employees.manager_id AS assignManager FROM employees, `;
+        db.query('SELECT employees.id, employees.first_name, employees.last_name, employees.role_id, employees.manager_id ')
+        db.query(sqlAddEmployee, paramsTwo, (err, result) => {
+                console.log("New employee added");
+
+                teamArray.push(sqlAddEmployee, paramsTwo);
+                companyStructure();
+        })
+        
     });
 }
+
+
+
+// WHEN I choose to update an employee role
+// THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
 
 // Update Employee Role prompt
 function updateEmployeeRole() {
