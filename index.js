@@ -145,12 +145,12 @@ function addRole() {
 
     ])
     .then(answers => {
-        const params = [answers.role, answers.salary];
-        const sqlRole = `SELECT name, id FROM departments`;
-        db.query(sqlRole, (err, result) => {
-                console.log("Department added");
+        const params = [answers.role, answers.salary, answers.dept];
+        const sqlRole = `SELECT roles.title AS newRole, roles.salary AS salary, roles.dept_id AS dept FROM roles, `;
+        db.query(sqlRole, params, (err, result) => {
+                console.log("New role added");
 
-                teamArray.push(sql);
+                teamArray.push(sqlRole, params);
                 companyStructure();
         })
     })
