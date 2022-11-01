@@ -99,20 +99,58 @@ function viewEmployees() {
     });
 };
 
+
+// function addDept() {
+//     inquirer.prompt ([
+//         {
+//             type:"input",
+//             name: "addADepartment",
+//             message: "What is the name of the department?",
+//         }
+//     ])
+//     .then(answer => {
+//         const sql = `INSERT INTO departments (name) VALUES (?)`;
+//         // const params = [body.name];
+
+//         db.query(sql, answer.addADepartment, (err, result) => {
+//             if(result){
+//                 console.table(result);
+//             }
+//             // ask the user what they want to do again
+//             companyStructure();
+//         }
+//         // const createDept = new Department(answer.addADepartment);
+//         // teamArray.push(createDept);
+//     })
+// }
+
 // Add Dept prompt
 function addDept() {
     inquirer.prompt ([
         {
-            type:"input",
+            type: "input",
             name: "addADepartment",
             message: "What is the name of the department?",
+            validate: addADepartment =>{
+                if (addADepartment) {
+                    return true;
+                } else {
+                    console.log('Please enter a department name');
+                    return false;
+                }
+            }
         }
     ])
-    .then(answers => {
-        const createDept = new Department(answers.addADepartment);
-        teamArray.push(createDept);
-        companyStructure();
-    });
+    .then(answer => {
+        const sql = `INSERT INTO departments (name) VALUES (?)`;
+        db.query(sql, answer.addADepartment, (err, result) => {
+            if(result){
+                console.table(result);
+                teamArray.push(sql);
+                companyStructure();
+            }
+        })
+    })
 }
 
 // Add Employee prompt
