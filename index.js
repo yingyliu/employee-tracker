@@ -256,9 +256,10 @@ function updateEmployeeRole() {
                 choices: updateEmployee,
             },
             {
-                type: "input",
+                type: "list",
                 name: "newRole",
                 message: "Please select a new role for the employee.",
+                choices: updateRole,
             }
         ])
         .then(answers => {
