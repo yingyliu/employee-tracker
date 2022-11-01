@@ -53,6 +53,9 @@ function companyStructure() {
             case 'Add a department':
                 addDept()
                 break;
+            case 'Add a role':
+                addRole()
+                break;
             case 'Add an employee':
                 addEmployee()
                 break;
@@ -99,31 +102,6 @@ function viewEmployees() {
     });
 };
 
-
-// function addDept() {
-//     inquirer.prompt ([
-//         {
-//             type:"input",
-//             name: "addADepartment",
-//             message: "What is the name of the department?",
-//         }
-//     ])
-//     .then(answer => {
-//         const sql = `INSERT INTO departments (name) VALUES (?)`;
-//         // const params = [body.name];
-
-//         db.query(sql, answer.addADepartment, (err, result) => {
-//             if(result){
-//                 console.table(result);
-//             }
-//             // ask the user what they want to do again
-//             companyStructure();
-//         }
-//         // const createDept = new Department(answer.addADepartment);
-//         // teamArray.push(createDept);
-//     })
-// }
-
 // Add Dept prompt
 function addDept() {
     inquirer.prompt ([
@@ -131,27 +109,61 @@ function addDept() {
             type: "input",
             name: "addADepartment",
             message: "What is the name of the department?",
-            validate: addADepartment =>{
-                if (addADepartment) {
-                    return true;
-                } else {
-                    console.log('Please enter a department name');
-                    return false;
-                }
-            }
         }
     ])
     .then(answer => {
         const sql = `INSERT INTO departments (name) VALUES (?)`;
         db.query(sql, answer.addADepartment, (err, result) => {
-            if(result){
-                console.table(result);
+                console.log("Department added");
+
                 teamArray.push(sql);
                 companyStructure();
-            }
         })
     })
-}
+};
+
+
+// WHEN I choose to add a role
+// THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
+function addRole() {
+    inquirer.prompt ([
+        {
+            type: "input",
+            name: "newRole",
+            message: "What is the name of the role?",
+        },
+        {
+            type: "input",
+            name: "salary",
+            message: "What is the salary of the role?",
+        },
+        {
+            type: "input",
+            name: "dept",
+            message: "Which department does the role belong to?",
+        }
+
+    ])
+    .then(answers => {
+        const params = [answers.role, answers.salary];
+        const sqlRole = `SELECT name, id FROM departments`;
+        db.query(sqlRole, (err, result) => {
+                console.log("Department added");
+
+                teamArray.push(sql);
+                companyStructure();
+        })
+    })
+};
+
+
+// WHEN I choose to add an employee
+// THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
+
+// WHEN I choose to update an employee role
+// THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
+
+
 
 // Add Employee prompt
 function addEmployee() {
