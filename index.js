@@ -207,18 +207,25 @@ function addEmployee() {
 function updateEmployeeRole() {
     inquirer.prompt ([
         {
-            type:"input",
+            type:"list",
             name: "updateRole",
             message: "Which employee's role do you want to update?",
+            choices: employeesArray,
+        },
+        {
+            type: "list",
+            name: "newRole",
+            message: "Please select a new role for the employee.",
+            choices: rolesArray,
         }
     ])
     .then(answers => {
-        const paramsThree = [answers.firstName, answers.lastName, answers.role, answers.assignManager];
-        const sqlAddEmployee = `INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES (?, ?, ?,?)`;
-        db.query(sqlAddEmployee, paramsThree, (err, result) => {
+        const paramsThree = [answers.updateRole, answers.newRole];
+        const sqlUpdateEmployee = `UPDATE employees SET role_id =? WHERE id = ?`;
+        db.query(sqlUpdateEmployee, paramsThree, (err, result) => {
                 console.log(result);
 
-                teamArray.push(sqlAddEmployee, paramsThree);
+                teamArray.push(sqlUpdateEmployee, paramsThree);
                 companyStructure();
         })
     });
