@@ -204,31 +204,69 @@ function addEmployee() {
 // THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
 
 // Update Employee Role prompt
-function updateEmployeeRole() {
-    inquirer.prompt ([
-        {
-            type:"list",
-            name: "updateRole",
-            message: "Which employee's role do you want to update?",
-            choices: "SELECT * FROM employees",
-        },
-        {
-            type: "list",
-            name: "newRole",
-            message: "Please select a new role for the employee.",
-            choices: "SELECT * FROM roles",
-        }
-    ])
-    .then(answers => {
-        const paramsThree = [answers.updateRole, answers.newRole];
-        const sqlUpdateEmployee = `UPDATE employees SET role_id =? WHERE id = ?`;
-        db.query(sqlUpdateEmployee, paramsThree, (err, result) => {
-                console.log(result);
+// function updateEmployeeRole() {
+//     inquirer.prompt ([
+//         {
+//             type:"list",
+//             name: "updateRole",
+//             message: "Which employee's role do you want to update?",
+//             choices: ["Sales", "Accountant"],
+//         },
+//         {
+//             type: "list",
+//             name: "newRole",
+//             message: "Please select a new role for the employee.",
+//             choices: ["Sales", "Accountant"],
+//         }
+//     ])
+//     .then(answers => {
+//         const paramsThree = [answers.updateRole, answers.newRole];
+//         const sqlUpdateEmployee = `UPDATE employees SET role_id =? WHERE id = ?`;
+//         db.query(sqlUpdateEmployee, paramsThree, (err, result) => {
+//                 console.log(result);
 
-                teamArray.push(sqlUpdateEmployee, paramsThree);
-                companyStructure();
+//                 teamArray.push(sqlUpdateEmployee, paramsThree);
+//                 companyStructure();
+//         })
+//     });
+// }
+
+
+
+
+function updateEmployeeRole() {
+    db.query(`SELECT * FROM employees;`, (err, result) => {
+        let updateEmployee = []
+        result.forEach((res) => {
+            updateEmployee.push(res.first_name)
         })
+        // console.log(updateEmployee);
+    
+    db.query(`SELECT * FROM roles;`, (err, result) => {
+        let updateRole = []
+        result.forEach((res) => {
+            updateRole.push(res.title)
+        })
+    })
+        inquirer.prompt ([
+            {
+                type:"list",
+                name: "updateRole",
+                message: "Which employee's role do you want to update?",
+                choices: updateEmployee,
+            },
+            {
+                type: "input",
+                name: "newRole",
+                message: "Please select a new role for the employee.",
+            }
+        ])
+        .then(answers => {
+            console.log(answers)
+        })
+        companyStructure();
     });
+
 }
 
 companyStructure();
