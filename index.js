@@ -30,7 +30,6 @@ function companyStructure() {
     )
     .then(answer => {
         console.log(answer)
-        // const { overview } = answers;
         const overview = answer.overview;
 
         switch (overview) {
@@ -86,7 +85,7 @@ function viewRoles() {
 
 // Display view all employees
 function viewEmployees() {
-    db.query('SELECT * FROM employees', function(err, results) { 
+    db.query('SELECT employees.id, employees.first_name, employees.last_name, roles.title AS title, roles.salary AS salary, employees.manager_id FROM employees LEFT JOIN roles ON employees.role_id = roles.id', function(err, results) { 
         if(results){
             console.table(results);
         }
@@ -139,7 +138,7 @@ function addRole() {
         const paramsOne = [answers.newRole, answers.salary, answers.dept];
         const sqlRole = `INSERT INTO roles(title, salary, dept_id) VALUES (?, ?, ?)`;
         db.query(sqlRole, paramsOne, (err, result) => {
-                console.log(result);
+                console.log("New role added");
 
                 teamArray.push(sqlRole, paramsOne);
                 companyStructure();
@@ -176,7 +175,7 @@ function addEmployee() {
             const paramsNoManager = [answers.firstName, answers.lastName, answers.role];
             const sqlAddEmployeeNoManager = `INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, Null)`;
             db.query(sqlAddEmployeeNoManager, paramsNoManager, (err, result) => {
-                console.log(result);
+                console.log("New employee added");
 
                 teamArray.push(sqlAddEmployeeNoManager, paramsNoManager);
                 companyStructure();
@@ -185,7 +184,7 @@ function addEmployee() {
         const paramsTwo = [answers.firstName, answers.lastName, answers.role, answers.assignManager];
         const sqlAddEmployee = `INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES (?, ?, ?,?)`;
         db.query(sqlAddEmployee, paramsTwo, (err, result) => {
-                console.log(result);
+                console.log("New employee added");
 
                 teamArray.push(sqlAddEmployee, paramsTwo);
                 companyStructure();
@@ -235,7 +234,7 @@ function updateEmployeeRole() {
             const sqlUpdateEmployee = `UPDATE employees SET role_id =? WHERE id = ?`;
             console.log(answers.updateRole + answers.newRole);
             db.query(sqlUpdateEmployee, paramsThree, (err, result) => {
-                    console.log(result);
+                    console.log("Employee info has been updated.");
     
                     teamArray.push(sqlUpdateEmployee, paramsThree);
                     companyStructure();
