@@ -1,6 +1,6 @@
 # Employee-Tracker
 
-[Employee-tracker Video](https://)
+[Employee-tracker Video](https://youtu.be/esdijP72z2A)
 
 ## Table of Contents
 - [Description](#description)
