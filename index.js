@@ -1,17 +1,10 @@
 // Import and require mysql2
 const mysql = require('mysql2');
 
-// const express = require('express');
+// Import inquirer from 'inquirer';
 const inquirer = require('inquirer');
-// import inquirer from 'inquirer';
 
-// const app = express();
-
-const teamArray =[];
-
-// // Express middleware
-// app.use(express.urlencoded({ extended: false }));
-// app.use(express.json());
+let teamArray =[];
 
 // Connect to database
 const db = mysql.createConnection(
@@ -122,9 +115,7 @@ function addDept() {
     })
 };
 
-
-// WHEN I choose to add a role
-// THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
+// Add a role prompt
 function addRole() {
     inquirer.prompt ([
         {
@@ -146,7 +137,6 @@ function addRole() {
     ])
     .then(answers => {
         const paramsOne = [answers.newRole, answers.salary, answers.dept];
-        // const sqlRole = `INSERT INTO role(title, salary, dept_id) VALUES (?,?,?)`;
         const sqlRole = `INSERT INTO roles(title, salary, dept_id) VALUES (?, ?, ?)`;
         db.query(sqlRole, paramsOne, (err, result) => {
                 console.log(result);
@@ -157,11 +147,7 @@ function addRole() {
     })
 };
 
-
-// WHEN I choose to add an employee
-// THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
-
-// Add Employee prompt
+// Add an Employee prompt
 function addEmployee() {
     inquirer.prompt ([
         {
@@ -186,6 +172,16 @@ function addEmployee() {
         },
     ])
     .then(answers => { 
+        if (answers.assignManager === "") {
+            const paramsNoManager = [answers.firstName, answers.lastName, answers.role];
+            const sqlAddEmployeeNoManager = `INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, Null)`;
+            db.query(sqlAddEmployeeNoManager, paramsNoManager, (err, result) => {
+                console.log(result);
+
+                teamArray.push(sqlAddEmployeeNoManager, paramsNoManager);
+                companyStructure();
+            })
+        } else {
         const paramsTwo = [answers.firstName, answers.lastName, answers.role, answers.assignManager];
         const sqlAddEmployee = `INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES (?, ?, ?,?)`;
         db.query(sqlAddEmployee, paramsTwo, (err, result) => {
@@ -193,61 +189,26 @@ function addEmployee() {
 
                 teamArray.push(sqlAddEmployee, paramsTwo);
                 companyStructure();
-        })
-        
-    });
-}
-
-
-
-// WHEN I choose to update an employee role
-// THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
+           
+            });
+    }});
+    
+    };
 
 // Update Employee Role prompt
-// function updateEmployeeRole() {
-//     inquirer.prompt ([
-//         {
-//             type:"list",
-//             name: "updateRole",
-//             message: "Which employee's role do you want to update?",
-//             choices: ["Sales", "Accountant"],
-//         },
-//         {
-//             type: "list",
-//             name: "newRole",
-//             message: "Please select a new role for the employee.",
-//             choices: ["Sales", "Accountant"],
-//         }
-//     ])
-//     .then(answers => {
-//         const paramsThree = [answers.updateRole, answers.newRole];
-//         const sqlUpdateEmployee = `UPDATE employees SET role_id =? WHERE id = ?`;
-//         db.query(sqlUpdateEmployee, paramsThree, (err, result) => {
-//                 console.log(result);
-
-//                 teamArray.push(sqlUpdateEmployee, paramsThree);
-//                 companyStructure();
-//         })
-//     });
-// }
-
-
-
-
 function updateEmployeeRole() {
     db.query(`SELECT * FROM employees;`, (err, result) => {
         let updateEmployee = []
         result.forEach((res) => {
-            updateEmployee.push(res.first_name)
+            updateEmployee.push(res.first_name,)
         })
-        // console.log(updateEmployee);
     
     db.query(`SELECT * FROM roles;`, (err, result) => {
         let updateRole = []
         result.forEach((res) => {
             updateRole.push(res.title)
         })
-    })
+    
         inquirer.prompt ([
             {
                 type:"list",
@@ -263,11 +224,28 @@ function updateEmployeeRole() {
             }
         ])
         .then(answers => {
-            console.log(answers)
-        })
-        companyStructure();
+            db.query("SELECT roles.id FROM roles WHERE title = ? ", [answers.newRole], (err, result) => {
+                let role_id = result[0].id
+                console.log(role_id)
+            db.query("SELECT employees.id FROM employees WHERE first_name =?", [answers.updateRole], (err, result) => {
+                let employee_id = result[0].id
+                console.log(employee_id)
+            
+            const paramsThree = [role_id, employee_id];
+            const sqlUpdateEmployee = `UPDATE employees SET role_id =? WHERE id = ?`;
+            console.log(answers.updateRole + answers.newRole);
+            db.query(sqlUpdateEmployee, paramsThree, (err, result) => {
+                    console.log(result);
+    
+                    teamArray.push(sqlUpdateEmployee, paramsThree);
+                    companyStructure();
+            })
+        });
+    })
+    })
+   
     });
-
-}
+});
+};
 
 companyStructure();
